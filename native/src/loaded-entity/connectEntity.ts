@@ -1,3 +1,4 @@
+import React from "react";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import WaitUntilEntityIsLoadedFactory from "./components/WaitUntilEntityIsLoadedFactory";
@@ -15,7 +16,7 @@ type ConnectEntityOptions = {
 
 export default function connectEntity(options : ConnectEntityOptions)
 {
-  return (DecoratedComponent: React.ComponentType) => connect((state, props) => {
+  return <P extends any>(DecoratedComponent: React.ComponentType<P>) => connect((state: any, props: P) => {
     let identifier = options.identifierFromPropsResolver(props);
 
     return {

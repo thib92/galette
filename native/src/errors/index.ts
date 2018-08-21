@@ -1,3 +1,4 @@
+import React from "react";
 import ErrorWrapper from "./components/ErrorWrapper";
 import ErrorMessage from "./components/ErrorMessage";
 import middleware from "./middleware";

@@ -1,15 +1,21 @@
 import React from "react";
 import {ActivityIndicator, View} from "react-native";
 
+type AdditionalProps = {
+
+};
+
 type State = {
   isLoading: boolean;
 }
 
-export default function WaitUntilEntityIsLoadedFactory (DecoratedComponent: React.ComponentType, descriptor) {
-  return class extends React.Component<{}, State> {
+export default function WaitUntilEntityIsLoadedFactory <P extends any>(DecoratedComponent: React.ComponentType<P>, descriptor) {
+  type Props = P & AdditionalProps;
+  return class extends React.Component<Props, State> {
+    // @ts-ignore
     static navigationOptions = DecoratedComponent.navigationOptions; // TODO: What is this for?
 
-    constructor(props) {
+    constructor(props: Props) {
       super(props);
 
       this.state = {
@@ -21,7 +27,7 @@ export default function WaitUntilEntityIsLoadedFactory (DecoratedComponent: Reac
       this.ensureObjectIsLoaded();
     }
 
-    componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
       if (descriptor.havePropertiesChanged(prevProps, this.props)) {
         this.ensureObjectIsLoaded();
       }
