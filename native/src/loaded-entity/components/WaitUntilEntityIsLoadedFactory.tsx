@@ -1,21 +1,22 @@
 import React from "react";
 import {ActivityIndicator, View} from "react-native";
 
-type AdditionalProps = {
-
+export type Descriptor<P> = {
+  havePropertiesChanged: (prevProps: P, props: P) => boolean,
+  objectIsLoaded: (props: P) => boolean,
+  loadObject?: (props: P) => void,
 };
 
 type State = {
   isLoading: boolean;
 }
 
-export default function WaitUntilEntityIsLoadedFactory <P extends any>(DecoratedComponent: React.ComponentType<P>, descriptor) {
-  type Props = P & AdditionalProps;
-  return class extends React.Component<Props, State> {
+export default function WaitUntilEntityIsLoadedFactory <P extends any>(DecoratedComponent: React.ComponentType<P>, descriptor: Descriptor<P>) {
+  return class extends React.Component<P, State> {
     // @ts-ignore
-    static navigationOptions = DecoratedComponent.navigationOptions; // TODO: What is this for?
+    static navigationOptions = DecoratedComponent.navigationOptions;
 
-    constructor(props: Props) {
+    constructor(props: P) {
       super(props);
 
       this.state = {
@@ -27,7 +28,7 @@ export default function WaitUntilEntityIsLoadedFactory <P extends any>(Decorated
       this.ensureObjectIsLoaded();
     }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: P) {
       if (descriptor.havePropertiesChanged(prevProps, this.props)) {
         this.ensureObjectIsLoaded();
       }
@@ -39,8 +40,9 @@ export default function WaitUntilEntityIsLoadedFactory <P extends any>(Decorated
           this.setState({
             isLoading: true
           });
-
-          descriptor.loadObject(this.props);
+          if (descriptor.loadObject) {
+            descriptor.loadObject(this.props);
+          }
         }
       } else if (this.state.isLoading) {
         this.setState({

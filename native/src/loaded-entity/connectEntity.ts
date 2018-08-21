@@ -7,14 +7,14 @@ type Action = {
   type: string;
   [x: string]: any;
 };
-type ConnectEntityOptions = {
+type ConnectEntityOptions<State> = {
   property: string;
-  loadEntityAction: (identifier: string) => Action;
-  entitySelector: (state: any, identifier: string) => any; // TODO: Should `state` be typed with a generic?
-  identifierFromPropsResolver: (props: any) => string; // TODO: should props be typed a little more?
+  loadEntityAction?: (identifier: string) => Action;
+  entitySelector: (state: State, identifier: string) => any; // TODO: Should `state` be typed with a generic?
+  identifierFromPropsResolver?: (props: any) => string; // TODO: should props be typed a little more?
 }
 
-export default function connectEntity(options : ConnectEntityOptions)
+export default function connectEntity<State>(options : ConnectEntityOptions<State>)
 {
   return <P extends any>(DecoratedComponent: React.ComponentType<P>) => connect((state: any, props: P) => {
     let identifier = options.identifierFromPropsResolver(props);
@@ -31,9 +31,11 @@ export default function connectEntity(options : ConnectEntityOptions)
       return prevProps[options.property] !== newProps[options.property];
     },
     loadObject: (props) => {
-      props.loadEntity(
-        options.identifierFromPropsResolver(props)
-      )
+      if (props.loadEntity) {
+        props.loadEntity(
+          options.identifierFromPropsResolver(props)
+        )
+      }
     },
     objectIsLoaded: (props) => {
       return !!props[options.property];
