@@ -2,17 +2,20 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import WaitUntilEntityIsLoadedFactory from "./components/WaitUntilEntityIsLoadedFactory";
 
-type Action = any;
+type Action = {
+  type: string;
+  [x: string]: any;
+};
 type ConnectEntityOptions = {
   property: string;
   loadEntityAction: (identifier: string) => Action;
-  entitySelector: (state: any, identifier: string) => any;
-  identifierFromPropsResolver: (props: any) => string;
+  entitySelector: (state: any, identifier: string) => any; // TODO: Should `state` be typed with a generic?
+  identifierFromPropsResolver: (props: any) => string; // TODO: should props be typed a little more?
 }
 
-export default function connectEntity(DecoratedComponent, options : ConnectEntityOptions)
+export default function connectEntity(options : ConnectEntityOptions)
 {
-  return connect((state, props) => {
+  return (DecoratedComponent: React.ComponentType) => connect((state, props) => {
     let identifier = options.identifierFromPropsResolver(props);
 
     return {
