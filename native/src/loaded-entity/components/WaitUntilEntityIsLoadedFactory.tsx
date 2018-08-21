@@ -11,7 +11,7 @@ type State = {
   isLoading: boolean;
 }
 
-export default function WaitUntilEntityIsLoadedFactory <P extends any>(DecoratedComponent: React.ComponentType<P>, descriptor: Descriptor<P>) {
+export default function WaitUntilEntityIsLoadedFactory <P extends any>(DecoratedComponent: React.ComponentType<P>, descriptor: Descriptor<P>): React.ComponentType<P> {
   return class extends React.Component<P, State> {
     // @ts-ignore
     static navigationOptions = DecoratedComponent.navigationOptions;

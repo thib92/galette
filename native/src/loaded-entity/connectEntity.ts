@@ -16,12 +16,18 @@ type ConnectEntityOptions<State> = {
 
 export default function connectEntity<State>(options : ConnectEntityOptions<State>)
 {
-  return <P extends any>(DecoratedComponent: React.ComponentType<P>) => connect((state: any, props: P) => {
-    let identifier = options.identifierFromPropsResolver(props);
+  return <P extends any>(DecoratedComponent: React.ComponentType<P>) => connect((state: State, props: P) => {
+    if (options.identifierFromPropsResolver) {
+      let identifier = options.identifierFromPropsResolver(props);
+    } else {
+    }
+
+    let identifier = options.identifierFromPropsResolver ? options.identifierFromPropsResolver(props) : undefined;
 
     return {
       [options.property]: options.entitySelector(state, identifier),
     }
+
   }, dispatch => {
     return bindActionCreators({
       loadEntity: options.loadEntityAction,
