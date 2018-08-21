@@ -5,9 +5,9 @@ type State = {
   isLoading: boolean;
 }
 
-export default function WaitUntilEntityIsLoadedFactory (DecoratedComponent, descriptor) {
+export default function WaitUntilEntityIsLoadedFactory (DecoratedComponent: React.ComponentType, descriptor) {
   return class extends React.Component<{}, State> {
-    static navigationOptions = DecoratedComponent.navigationOptions;
+    static navigationOptions = DecoratedComponent.navigationOptions; // TODO: What is this for?
 
     constructor(props) {
       super(props);

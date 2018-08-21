@@ -11,12 +11,12 @@ const mockStore = configureStore(middlewares)
 test('it displays a loading indicator and dispatches the action if entity was not yet loaded', () => {
   const initialState = { users: {} }
   const store = mockStore(initialState)
-  const WrappedComponent = connectEntity(SimpleComponentExpectingAUserEntity, {
+  const WrappedComponent = connectEntity({
     property: 'user',
     loadEntityAction: loadUser,
     entitySelector: (state, username) => state.users[username],
     identifierFromPropsResolver: props => props.username
-  })
+  })(SimpleComponentExpectingAUserEntity);
 
   const tree = renderer.create(
     <WrappedComponent username="sam" store={store}/>
@@ -38,12 +38,12 @@ test('it renders the component with the right property', () => {
   };
 
   const store = mockStore(initialState)
-  const WrappedComponent = connectEntity(SimpleComponentExpectingAUserEntity, {
+  const WrappedComponent = connectEntity({
     property: 'user',
     loadEntityAction: loadUser,
     entitySelector: (state, username) => state.users[username],
     identifierFromPropsResolver: props => props.username
-  })
+  })(SimpleComponentExpectingAUserEntity);
 
   const tree = renderer.create(
     <WrappedComponent username="sam" store={store}/>
